@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:housing/screens/components.dart';
+import 'package:housing/services/services.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({ Key? key }) : super(key: key);
@@ -11,6 +12,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   var page='login';
+  bool loading=false;
 
   tabController(){
     setState(() {
@@ -25,10 +27,29 @@ class _SignUpState extends State<SignUp> {
   TextEditingController confirmPass=TextEditingController();
   var _choosenValue;
 
-   signUp(){
-     print(_choosenValue);
-   print(username.text);
-   print(pass.text);
+   signUp()async{
+     setState(() { loading=true;});
+    if (page=='register' ){
+      if (pass.text==confirmPass.text){
+        
+        var result=  await createuser({
+            "name":name.text,
+            "username":username.text,
+            "password":pass.text,
+            "type": _choosenValue
+          });
+          
+          result=='success' ? Navigator.pushReplacementNamed(context, '/home') :
+            alert(context, "warning", "failed to register!!");
+      }else alert(context, "warning", "password mismatch!!");
+    }
+    else{
+     var result= await loginUser(username.text, pass.text);
+      result=='success' ? Navigator.pushReplacementNamed(context, '/home') :
+         alert(context, "warning", "invalid credentials!!");
+    }
+
+     setState(() { loading=false;});
 
   }
   
@@ -76,7 +97,7 @@ class _SignUpState extends State<SignUp> {
               
 
               page=='register' ? Container(
-                    width: screen.width*0.76,
+                    width: screen.width*0.75,
                       decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10)),
@@ -115,7 +136,8 @@ class _SignUpState extends State<SignUp> {
 
               SizedBox(height: 30,),
 
-              Container(
+              loading ? CircularProgressIndicator():
+               Container(
                 width: screen.width*0.7,
                 height: 50,
                 decoration: BoxDecoration(

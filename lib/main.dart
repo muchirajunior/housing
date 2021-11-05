@@ -1,8 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:housing/screens/home.dart';
 import 'package:housing/screens/launcher.dart';
 import 'package:housing/screens/signup.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -19,7 +23,8 @@ class MyApp extends StatelessWidget {
 
       routes: {
         '/':(context)=>Launcher(),
-        '/signup':(context)=>SignUp()
+        '/signup':(context)=>SignUp(),
+        '/home':(context)=>Home()
       },
      
     );

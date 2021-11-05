@@ -91,3 +91,14 @@ return Container(
   ),
 );
 }
+
+alert(BuildContext context,var title, var message){
+  showDialog(context: context, builder: (context){
+    return AlertDialog(
+      backgroundColor: Colors.blue,
+      title: Text(title),
+      content: Text(message),
+    );
+  });
+
+}
