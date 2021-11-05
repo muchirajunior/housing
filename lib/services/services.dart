@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:housing/services/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -45,4 +46,18 @@ logOut(BuildContext context)async{
   SharedPreferences preferences=await SharedPreferences.getInstance();
   await preferences.clear();
   Navigator.pushReplacementNamed(context, '/');
+}
+
+createNewPost(var house, var description)async{
+  var result='failed';
+  CollectionReference reference= FirebaseFirestore.instance.collection('posts');
+  var user=await currentUser();
+  await reference.add({
+      "house":house,
+      "description":description,
+      "landlordId":user['id'],
+      'username':user['username']
+    }).then((value) => result='success');
+
+  return result;
 }

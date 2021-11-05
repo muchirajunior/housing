@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:housing/services/services.dart';
 
 signupTabButton(var text, Function method ){
   return MaterialButton(
@@ -7,8 +8,15 @@ signupTabButton(var text, Function method ){
     );
 }
 
+submitButton(var text, Function method){
+  return MaterialButton(
+    onPressed: ()=>method(),
+    child: Text(text),
+  );
+}
 
-textInput(TextEditingController controller, var hint, bool pass){
+
+textInput(TextEditingController controller, var hint, bool pass, {int maxlines=1}){
   return Container(
     margin: EdgeInsets.all(10),
     decoration: BoxDecoration(
@@ -17,6 +25,7 @@ textInput(TextEditingController controller, var hint, bool pass){
     child: TextFormField(
       obscureText: pass,
       controller: controller,
+      maxLines: maxlines,
        decoration: InputDecoration(
          contentPadding: EdgeInsets.all(10),
          border: InputBorder.none,
@@ -102,3 +111,29 @@ alert(BuildContext context,var title, var message){
   });
 
 }
+
+popMenu(String user, BuildContext context)=> PopupMenuButton<String>(
+          onSelected: (item) => handlePopMenuClick(item, context),
+          itemBuilder: (context) => user=='landlord' ? [
+             
+            PopupMenuItem<String>(value: 'new', child: Text('new posts')) ,
+            PopupMenuItem<String>(value: 'posts', child: Text('My posts')),
+            PopupMenuItem<String>(value: 'logout', child: Text('Logout')),
+          ] : [
+            PopupMenuItem<String>(value: 'liked', child: Text('Liked')),
+            PopupMenuItem<String>(value: 'logout', child: Text('Logout')),
+          ],
+        );
+
+handlePopMenuClick(String item, BuildContext context) async{
+  switch (item) {
+    case 'logout': await logOut(context);
+                  break;
+    case 'new': Navigator.pushNamed(context, '/create');
+                  break;
+    default:
+  }
+}
+
+
+
