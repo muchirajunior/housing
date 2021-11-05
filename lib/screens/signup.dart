@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:housing/screens/components.dart';
 import 'package:housing/services/services.dart';
+import 'package:housing/services/utils.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({ Key? key }) : super(key: key);
@@ -39,14 +40,20 @@ class _SignUpState extends State<SignUp> {
             "type": _choosenValue
           });
           
-          result=='success' ? Navigator.pushReplacementNamed(context, '/home') :
+          if (result=='success') {
+            var data= await currentUser();
+            Navigator.pushReplacementNamed(context, '/home', arguments: data );
+          }else
             alert(context, "warning", "failed to register!!");
+
       }else alert(context, "warning", "password mismatch!!");
     }
     else{
      var result= await loginUser(username.text, pass.text);
-      result=='success' ? Navigator.pushReplacementNamed(context, '/home') :
-         alert(context, "warning", "invalid credentials!!");
+      if (result=='success') {
+            var data= await currentUser();
+            Navigator.pushReplacementNamed(context, '/home', arguments: data );
+          }else alert(context, "warning", "invalid credentials!!");
     }
 
      setState(() { loading=false;});

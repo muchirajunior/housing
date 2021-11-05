@@ -20,33 +20,27 @@ class _HomeState extends State<Home> {
    Messages()
  ];
 
- Map<String, dynamic> user={
-   'username':"user",
-   'type':"user"
- };
-
- getUser()async{ user= await currentUser();}
 
  @override
   void initState() {
     super.initState();
-    getUser();
+    
   }
 
  
 
   @override
   Widget build(BuildContext context) {
-  
+    var user = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
     return Scaffold(
       appBar: AppBar(
-        title: Text('HOUSE POSTS'),
+        title: Text(index==0 ? 'HOUSE POSTS' :"MESSAGES"),
         actions: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Icon(Icons.person),
               Text(user['username']),
-              Icon(Icons.person)
             ],
           ),
           popMenu(user['type'], context)

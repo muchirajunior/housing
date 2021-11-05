@@ -36,10 +36,12 @@ class _CreatePostState extends State<CreatePost> {
    }
 
    submitPost()async{
+     if (name.text.length>4 && description.text.length>4){
      setState(() { loading=true; });
-     var res=await createNewPost(name.text, description.text);
+     var res=await createNewPost(name.text, description.text, image);
      res=='success' ? Navigator.pop(context) :
      setState(() { loading=false; });
+     }else alert(context, "warning", "please fill all the fields");
    }
   
 
