@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:housing/screens/components.dart';
+import 'package:housing/services/services.dart';
+import 'package:housing/services/utils.dart';
 
 class Posts extends StatefulWidget {
   const Posts({ Key? key }) : super(key: key);
@@ -11,6 +13,22 @@ class Posts extends StatefulWidget {
 
 class _PostsState extends State<Posts> {
   _viewHouse(){}
+  
+  var user;
+  var images;
+  getUser() async {
+    var data=await currentUser();
+    setState(() {
+      user=data;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +39,7 @@ class _PostsState extends State<Posts> {
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              mainAxisExtent: 210,
+              mainAxisExtent: 250,
               childAspectRatio: 4 / 3,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10
@@ -29,18 +47,27 @@ class _PostsState extends State<Posts> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index){
               var post=snapshot.data!.docs[index];
+             
                 return Card(
                   child: Column(
                     children: [
-                      Image.network('https://media-cdn.tripadvisor.com/media/vr-splice-j/06/dd/04/70.jpg', fit: BoxFit.fitWidth,),
+                      Container(
+                        height: 100,
+                        width: double.infinity,
+                        child: Image.network(getImageUrl(post['image']),  fit: BoxFit.cover,)),
                       Text(post['house']),
-                      Text(post['description'],style: TextStyle( color: Colors.grey,),
-                                   maxLines: 3, overflow: TextOverflow.ellipsis),
+                      Expanded(
+                        child: Text(post['description'],style: TextStyle( color: Colors.grey,),
+                                     maxLines: 3, overflow: TextOverflow.ellipsis),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                        ElevatedButton(onPressed: (){}, child: Text('view')),
-                        IconButton(onPressed: (){}, icon: Icon(Icons.favorite_outline, color: Colors.amber,))
+                        post['landlordId']== user['id'] ?  ElevatedButton(onPressed: ()=>deleteBox(context, post.id),
+                         child: Text('delete')):
+                         ElevatedButton(onPressed: ()=>messageBox(context, post['landlordId'], post["username"]),
+                         child: Text('chat')),
+                        IconButton(onPressed: (){},  icon: Icon(Icons.favorite_outline, color: Colors.amber,))
                       ],)
 
 

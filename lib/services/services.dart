@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:housing/services/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +73,7 @@ createNewPost(var house, var description, var image)async{
 
   }catch(e){ print(e);}
 
-  uploadImage(image);
+  await uploadImage(image);
 
   return result;
 }
@@ -82,13 +81,45 @@ createNewPost(var house, var description, var image)async{
 uploadImage(var _imageFile)async{
   File file = File(_imageFile.path);
   var filename=_imageFile.path.split('/').last;
-   try{
-    await firebase_storage.FirebaseStorage.instance
-        .ref('images/$filename')
-        .putFile(file);
-   } catch(e){
-     print("error uploading image........");
-     throw Exception(e);
-   }
+ FirebaseStorage  storage=FirebaseStorage.instance;
+
+ await storage.ref('images/$filename').putFile(file);
+  
 
 }
+
+sendMessage(var receiverId, var receiverName, var message) async{
+    CollectionReference reference=FirebaseFirestore.instance.collection('messages');
+    var user=await currentUser();
+    await reference.add({
+      "senderId":user['id'],
+      "senderName":user['username'],
+      "receiverId":receiverId,
+      "receiverName":receiverName,
+      "message":message
+    }).then((v) => print("successfully sent message"));
+}
+
+deletePost(var id)async{
+     CollectionReference reference= FirebaseFirestore.instance.collection('posts');
+
+     await reference.doc(id).delete().then((value) => print("post deleted sucessfuly"));
+}
+
+/*
+this method is no longer in use
+getImage(var name)async{
+  try{
+    // var url;
+    FirebaseStorage storage= FirebaseStorage.instance;
+   var url= await storage.ref('images/$name').getDownloadURL();
+    
+   print("\n printin image url $url \n");
+
+    return url.toString();
+  }catch(e){
+    return "no url";
+  }
+}
+
+*/

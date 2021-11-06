@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:housing/screens/components.dart';
 import 'package:housing/services/services.dart';
@@ -36,10 +35,13 @@ class _CreatePostState extends State<CreatePost> {
    }
 
    submitPost()async{
-     if (name.text.length>4 && description.text.length>4){
+     print("submit");
+     if (name.text.length>3 && description.text.length>4){
      setState(() { loading=true; });
      var res=await createNewPost(name.text, description.text, image);
-     res=='success' ? Navigator.pop(context) :
+     if (res=='success') { Navigator.pop(context);
+          snackbar(context, "created post successfully");
+     } else
      setState(() { loading=false; });
      }else alert(context, "warning", "please fill all the fields");
    }

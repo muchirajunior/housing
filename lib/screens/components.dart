@@ -136,4 +136,49 @@ handlePopMenuClick(String item, BuildContext context) async{
 }
 
 
+messageBox( BuildContext context, var receiverId, var username)async{
+  TextEditingController controller=TextEditingController();
+  await showDialog(context: context, barrierDismissible: false, builder: (context){
+    return AlertDialog(
+      backgroundColor: Colors.grey,
+      contentPadding: EdgeInsets.all(0),
+      title: Text("send message"),
+      content: textInput(controller, "message", false, maxlines: 4),
+      actions: [
+        submitButton("cancel", ()=>Navigator.pop(context)),
+        IconButton(onPressed: (){
+           sendMessage(receiverId, username, controller.text);
+           snackbar(context,"message sent successfuly");
+           Navigator.pop(context);
+        },
+         icon: Icon(Icons.send, size:30))
 
+      ],
+    );
+  });
+}
+
+deleteBox(BuildContext context, var id)async{
+     await showDialog(context: context, barrierDismissible: false, builder: (context){
+    return AlertDialog(
+       title: Text("warning"),
+       content: Text("once you delete this process is not reversible",
+              style: TextStyle(color: Colors.red), ),
+       actions: [
+         submitButton("cancel", ()=>Navigator.pop(context)),
+         IconButton(onPressed: (){
+           deletePost(id);
+           snackbar(context, "deleted post sucessfuly");
+           Navigator.pop(context);},
+          icon: Icon(Icons.delete, color: Colors.red,))
+       ],
+
+      );
+    });
+}
+
+snackbar( BuildContext context, var message){
+     return ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text(message))
+     );
+}
