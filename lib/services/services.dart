@@ -106,6 +106,11 @@ deletePost(var id)async{
      await reference.doc(id).delete().then((value) => print("post deleted sucessfuly"));
 }
 
+deleteMessage(var id) async{
+  CollectionReference reference= FirebaseFirestore.instance.collection('messages');
+  await reference.doc(id).delete();
+}
+
 /*
 this method is no longer in use
 getImage(var name)async{

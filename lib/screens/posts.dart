@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:housing/screens/components.dart';
-import 'package:housing/services/services.dart';
 import 'package:housing/services/utils.dart';
 
 class Posts extends StatefulWidget {
@@ -15,7 +15,7 @@ class _PostsState extends State<Posts> {
   _viewHouse(){}
   
   var user;
-  var images;
+ 
   getUser() async {
     var data=await currentUser();
     setState(() {
@@ -49,29 +49,30 @@ class _PostsState extends State<Posts> {
               var post=snapshot.data!.docs[index];
              
                 return Card(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: double.infinity,
-                        child: Image.network(getImageUrl(post['image']),  fit: BoxFit.cover,)),
-                      Text(post['house']),
-                      Expanded(
-                        child: Text(post['description'],style: TextStyle( color: Colors.grey,),
-                                     maxLines: 3, overflow: TextOverflow.ellipsis),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                        post['landlordId']== user['id'] ?  ElevatedButton(onPressed: ()=>deleteBox(context, post.id),
-                         child: Text('delete')):
-                         ElevatedButton(onPressed: ()=>messageBox(context, post['landlordId'], post["username"]),
-                         child: Text('chat')),
-                        IconButton(onPressed: (){},  icon: Icon(Icons.favorite_outline, color: Colors.amber,))
-                      ],)
-
-
-                    ],
+                  child: InkWell(
+                    onTap: ()=>Navigator.pushNamed(context, '/house', arguments: post.data()),
+                    child: Column(
+                      children: [
+                        imageBox(post['image'], height:100.0),
+                        
+                        Text(post['house']),
+                        Expanded(
+                          child: Text(post['description'],style: TextStyle( color: Colors.grey,),
+                                       maxLines: 3, overflow: TextOverflow.ellipsis),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                          post['landlordId']== user['id'] ?  ElevatedButton(onPressed: ()=>deleteBox(context, post.id),
+                           child: Text('delete')):
+                           ElevatedButton(onPressed: ()=>messageBox(context, post['landlordId'], post["username"]),
+                           child: Text('chat')),
+                          IconButton(onPressed: (){},  icon: Icon(Icons.favorite_outline, color: Colors.amber,))
+                        ],)
+                  
+                  
+                      ],
+                    ),
                   )
                 );
             });

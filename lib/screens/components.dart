@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:housing/services/services.dart';
+import 'package:housing/services/utils.dart';
 
 signupTabButton(var text, Function method ){
   return MaterialButton(
@@ -131,6 +133,8 @@ handlePopMenuClick(String item, BuildContext context) async{
                   break;
     case 'new': Navigator.pushNamed(context, '/create');
                   break;
+    case 'posts': Navigator.pushNamed(context, '/myposts');
+                  break;
     default:
   }
 }
@@ -177,8 +181,40 @@ deleteBox(BuildContext context, var id)async{
     });
 }
 
+deleteMessageBox(BuildContext context, var id)async{
+   await showDialog(context: context, barrierDismissible: false, builder: (context){
+    return AlertDialog(
+       title: Text("warning"),
+       content: Text("once you delete this process is not reversible",
+              style: TextStyle(color: Colors.red), ),
+       actions: [
+         submitButton("cancel", ()=>Navigator.pop(context)),
+         IconButton(onPressed: (){
+           deleteMessage(id);
+           snackbar(context, "deleted message sucessfuly");
+           Navigator.pop(context);},
+          icon: Icon(Icons.delete, color: Colors.red,))
+       ],
+
+      );
+    });
+}
+
 snackbar( BuildContext context, var message){
      return ScaffoldMessenger.of(context).showSnackBar(
        SnackBar(content: Text(message))
      );
+}
+
+imageBox(var name,{var height}){
+  return  Container(
+            height: height,
+            width: double.infinity,
+            child:CachedNetworkImage(
+                      imageUrl: customImageUrl(name),
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+          );
 }

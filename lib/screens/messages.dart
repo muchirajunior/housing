@@ -44,9 +44,10 @@ class _MessagesState extends State<Messages> {
                        child: ListTile(
                          title: Text(message['senderName']),
                          subtitle: Text(message['message']),
-                         trailing: IconButton(onPressed: ()=>messageBox(context, message['senderId'], message['senderName']), 
-                         icon: Icon(Icons.reply),
-                       )
+                         leading: IconButton(onPressed: ()=>messageBox(context, message['senderId'], message['senderName']), 
+                                   icon: Icon(Icons.reply),  ),
+                         trailing:IconButton( onPressed: ()=>deleteMessageBox(context, message.id),
+                                     icon: Icon(Icons.delete, color: Colors.red),)
                        )
                     );
                   }

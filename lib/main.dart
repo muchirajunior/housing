@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:housing/myposts.dart';
 import 'package:housing/screens/create.dart';
 import 'package:housing/screens/home.dart';
+import 'package:housing/screens/housepreview.dart';
 import 'package:housing/screens/launcher.dart';
 import 'package:housing/screens/signup.dart';
 
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
         '/':(context)=>Launcher(),
         '/signup':(context)=>SignUp(),
         '/home':(context)=>Home(),
-        '/create':(context)=>CreatePost()
+        '/create':(context)=>CreatePost(),
+        '/myposts':(context)=>MyPosts(),
+        '/house':(context)=>HousePreview()
       },
      
     );
