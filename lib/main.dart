@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:housing/myposts.dart';
+import 'package:housing/screens/myposts.dart';
 import 'package:housing/screens/create.dart';
 import 'package:housing/screens/home.dart';
 import 'package:housing/screens/housepreview.dart';
